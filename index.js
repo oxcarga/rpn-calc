@@ -12,7 +12,7 @@ const main = (inp) => {
   const op = new Operation(stack, inpArr);
   const res = op.process();
   if (typeof res === "string") {
-    console.log(res);
+    console.error(res);
   }
   console.log(stack.toArray());
 };
@@ -20,3 +20,6 @@ const main = (inp) => {
 const stack = new Stack();
 process.stdin.resume();
 process.stdin.on("data", main);
+process.on('SIGTERM', () => {
+  console.log('Terminating process');
+});

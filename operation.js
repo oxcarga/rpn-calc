@@ -1,4 +1,5 @@
 export default class Operation {
+  //
   #operations = {
     "*": (a,b) => a*b,
     "/": (a,b) => a/b,
@@ -6,19 +7,33 @@ export default class Operation {
     "-": (a,b) => a-b,
   };
 
+  //
+  #commands = {
+    "q": () => process.exit()
+  };
+
+  //
   #err = {
     NO_OP: "[ERROR] No operands!",
     NO_BY_ZERO: "[ERROR] Can't divide by zero!",
   };
 
+  /**
+   *  
+   */
   constructor(stack, inpArr) {
     this.stack = stack;
     this.inpArr = inpArr;
   }
 
+  /**
+   *  
+   */
   process() {
     let res;
-    for (const inp of this.inpArr) {
+    for (let inp of this.inpArr) {
+      inp = inp.trim().split("\n")[0];
+      this.#checkCommand(inp);
       res = this.#checkOperand(inp);
       res = this.#checkOperation(inp);
       if (res) {
@@ -28,15 +43,28 @@ export default class Operation {
     return res;
   }
 
+  /**
+   *  
+   */
+  #checkCommand(inp) {
+    const cmd = this.#commands[inp];
+    return cmd && cmd();
+  }
+
+  /**
+   *  
+   */
   #checkOperand(inp) {
     if (typeof parseFloat(inp) === "number" && !isNaN(parseFloat(inp))) {
       this.stack.add(parseFloat(inp));
     }
   }
 
+  /**
+   *  
+   */
   #checkOperation(inp) {
-    const _inp = inp.trim().split("\n")[0];
-    const fn = this.#operations[_inp];
+    const fn = this.#operations[inp];
     if (!fn) { return; }
     const stackSize = this.stack.size();
     // no operands
@@ -46,7 +74,7 @@ export default class Operation {
     const a = this.stack.pop();
     const b = this.stack.pop();
     // no divisible by 0
-    if (b === 0 && _inp === "/") {
+    if (b === 0 && inp === "/") {
       return this.#err.NO_BY_ZERO;
     }
     // do the math
