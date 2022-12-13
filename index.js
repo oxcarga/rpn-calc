@@ -21,5 +21,5 @@ const stack = new Stack();
 process.stdin.resume();
 process.stdin.on("data", main);
 process.on('SIGTERM', () => {
-  console.log('Terminating process');
+  console.log('Terminating process ....');
 });
